@@ -4,7 +4,7 @@
 
 use Illuminate\Database\Eloquent\Model;
 
-"""
+/**
 Version 5.1 es Eloquent en logar de Model 
 
 Ver en archivo Model de laravel
@@ -16,16 +16,17 @@ se agregar a la DB automaticamente o cambia a FALSE
 
 Borrar migraciones de database/migration
 
-"""
-
+*/
 class Vehiculo extends Model{
 
 	protected $table = 'vehiculos';
 
 	protected $primaryKey = 'serie';
 
-	protected $fillable = array('color', 'cilindraje', 'protencia' );
+	protected $fillable = array('color', 'cilindraje', 'potencia', 'peso', 'fabricante_id');
 
+
+	protected $hidden = ['created_at', 'upload_at'];
 
 
 	/** ======================================
@@ -34,9 +35,11 @@ class Vehiculo extends Model{
 		seria @belongsToMany('MAYUS')
 	
 		Ojo en mayuscula
+		y no dice que campo se asocia, eso lo intuye Laravel
 	====================================== */
 	public function fabricante(){
-		$this->belongsTo('Fabricante');
+		return $this->belongsTo('App\Fabricante');
 	}
+	
 
 }

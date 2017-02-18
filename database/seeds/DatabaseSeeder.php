@@ -3,7 +3,19 @@
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 
+
+use App\User;
+
 class DatabaseSeeder extends Seeder {
+
+
+
+/**
+	Seeder:
+
+	Son intrucciones que se ejecutan
+*/
+
 
 	/**
 	 * Run the database seeds.
@@ -12,9 +24,15 @@ class DatabaseSeeder extends Seeder {
 	 */
 	public function run()
 	{
-		Model::unguard();
+		// deshacer asignaciones masivas
+		// Model::unguard();
 
-		// $this->call('UserTableSeeder');
+		$this -> call('FabricanteSeeder');
+		$this -> call('VehiculoSeeder');
+		
+		// truncar informacion e inserta de nuevo
+		User::Truncate();
+		$this -> call('UserSeeder');
 	}
 
 }

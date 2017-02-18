@@ -15,7 +15,11 @@ class Kernel extends HttpKernel {
 		'Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse',
 		'Illuminate\Session\Middleware\StartSession',
 		'Illuminate\View\Middleware\ShareErrorsFromSession',
-		'App\Http\Middleware\VerifyCsrfToken',
+
+		/* =====================================================
+		Utilizado cuando hacemos formularios con Laravel, en este caso es un REST 
+		===================================================== */
+		// 'App\Http\Middleware\VerifyCsrfToken',
 	];
 
 	/**
