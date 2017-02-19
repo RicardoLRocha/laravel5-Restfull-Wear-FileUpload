@@ -31,8 +31,8 @@ class FabricanteVehiculoController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function index($id)
-	{
+	public function index($id){
+
 		$fabricante = Fabricante::find($id);
 
 		if(!fabricante){
@@ -133,16 +133,88 @@ class FabricanteVehiculoController extends Controller {
 		//
 	}
 
-	/**
+	/** http://localhost/curso%20laravel/rest_project/server.php/fabricantes/3/vehiculos/5
+	 *
 	 * Update the specified resource in storage.
 	 *
-	 * @param  int  $id
+	 * @param  int  $idFabricante, $idVehiculo
 	 * @return Response
 	 */
-	public function update($id, $id_fabricante, $id_vehiculo )
-	{
-		//
+	public function update(Request $request, $idFabricante, $idVehiculo){
+
+		$metodo = $request->method();
+		$fabricante = Fabricante::find($idFabricante);
+		
+		if(!$fabricante){
+			return response()->json([
+				'menssage' => "Not found manufacturer",
+				"error" => True
+				], 404);
+		}
+
+		$vehiculo = $fabricante->vehiculos()->find($idVehiculo);
+		if(!$vehiculo){
+			return response()->json([
+				'menssage' => "Not found vehicle", 
+				"error" => True
+				], 404);
+		}
+
+		$color = $request->input('color');
+		$cilindraje = $request->input('cilindraje');
+		$potencia = $request->input('potencia');
+		$peso = $request->input('peso');
+		
+		if($metodo === 'PATCH'){
+
+			$bandera = false;
+
+			if($color != null && $color != ''){
+				$vehiculo->color = $color;
+				$bandera = true;
+			}
+
+			if($cilindraje != null && $cilindraje != ''){
+				$vehiculo->cilindraje = $cilindraje;
+				$bandera = true;
+			}
+
+			if($potencia != null && $potencia != ''){
+				$vehiculo->potencia = $potencia;
+				$bandera = true;
+			}
+
+			if($peso != null && $peso != ''){
+				$vehiculo->peso = $peso;
+				$bandera = true;
+			}
+
+			if($bandera){
+				$vehiculo->save();
+				return response()->json(['mensaje' => 'vehiculo editado'],200);
+			}
+			
+			return response()->json(['mensaje' => 'None vehicle was modified'],200);	
+		}
+
+		// es PUT
+
+		if(!$color || !$cilindraje || !$potencia || !$peso){
+			return response()->json([
+				'message' => 'Incomplete fields', 
+				'error' => True
+				],422);
+		}
+
+		$vehiculo->color = $color;
+		$vehiculo->cilindraje = $cilindraje;
+		$vehiculo->potencia = $potencia;
+		$vehiculo->peso = $peso;
+		$vehiculo->save();
+		
+		return response()->json(['mensaje' => 'Vehiculo editado'],200);
 	}
+
 
 	/**
 	 * Remove the specified resource from storage.
@@ -150,9 +222,26 @@ class FabricanteVehiculoController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id)
-	{
-		//
+ 	public function destroy($idFabricante, $idVehiculo){
+		
+		$fabricante =Fabricante::find($idFabricante);
+
+		if(!$fabricante)
+			return response()->json([
+				'message' => 'No se encuentra este fabricante', 
+				'error' => True
+				],404);
+		
+		$vehiculo = $fabricante->vehiculos()->find($idVehiculo);
+		
+		if(!$vehiculo)
+			return response()->json([
+				'message' => 'No se encuentra este vehiculo asociado a ese fabricante',
+				'error' => True
+				],404);
+		
+		$vehiculo->delete();
+		return response()->json(['message' => 'Vehiculo eliminado'], 200);
 	}
 
 }
