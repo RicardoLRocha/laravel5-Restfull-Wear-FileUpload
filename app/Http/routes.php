@@ -30,15 +30,25 @@ fabricantes.vehiculos
 // rompe con idea de REST
 // Route::get('/','VehiculoController@show_all');
 Route::resource('vehiculos','VehiculoController', ['only' => ['index', 'show']]);
-Route::resource('fabricantes','FabricanteController');
-Route::resource('fabricantes.vehiculos','FabricanteVehiculoController', ['except' => ['show']]);
+Route::resource('fabricantes','FabricanteController', ['except' => ['edit', 'create']]);
+Route::resource('fabricantes.vehiculos','FabricanteVehiculoController', ['except' => ['show', 'edit', 'create']]);
 
 // > php artisan make:controller VehiculoOperacionesController
 Route::get('vehiculos/op/costo/mayor', 'VehiculoOperacionesController@costo_mayor');
 Route::post('vehiculos/op/costo/mayor/que', 'VehiculoOperacionesController@cost_major_that');
 Route::get('vehiculos/op/costo/entre', 'VehiculoOperacionesController@cost_between');
 
+/**
+Laravel lee secuencialmente las Rutas URL, por eso las que no existen se ponen abajo
+*/
+Route::pattern('inexistente', '.*');
+Route::any('/{inexistente}', function(){
 
+	return response()->json([
+			'menssage' => "Rutas incorrectas",
+			"error" => True
+			], 404);
+});
 
 // Route::match(['get', 'post'], '/', ... )
 

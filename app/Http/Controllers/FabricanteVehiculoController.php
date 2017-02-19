@@ -19,7 +19,7 @@ class FabricanteVehiculoController extends Controller {
 	============================================= */
 	public function __construct(){
 
-		$this->middleware('auth.basic', ['only' => ['store', 'update', 'destroy']]  );
+		$this->middleware('auth.basic.once', ['only' => ['store', 'update', 'destroy']]  );
 	}
 
 
@@ -54,15 +54,6 @@ class FabricanteVehiculoController extends Controller {
 		
 	}
 
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return Response
-	 */
-	public function create()
-	{
-		//
-	}
 
 	/** http://localhost/curso%20laravel/rest_project/server.php/fabricantes/1/vehiculos
 	 * Store a newly created resource in storage.
@@ -108,38 +99,15 @@ class FabricanteVehiculoController extends Controller {
 	}
 
 
-	/** http://localhost/curso%20laravel/rest_project/server.php
-	* 
-	* http://localhost/curso%20laravel/rest_project/server.php/fabricantes/3/vehiculos/5
+	/** http://localhost/curso%20laravel/rest_project/server.php/fabricantes/3/vehiculos/5
 	*
-	* Display the specified resource.
+	* Update the specified resource in storage.
 	*
-	* Del fabricante con id, tal vehiculo
-	* @param  int  $id, 
+	*	SOLO SI ese Vehiculo {id} tiene ese Fabricante {id}
+	*
+	* @param  int  $idFabricante, $idVehiculo
 	* @return Response
 	*/
-	public function show($id_fabricante, $id_vehiculo ){
-		return "fabricante ".$id_fabricante." con vehiculo ".$id_vehiculo;
-	}
-
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit($id)
-	{
-		//
-	}
-
-	/** http://localhost/curso%20laravel/rest_project/server.php/fabricantes/3/vehiculos/5
-	 *
-	 * Update the specified resource in storage.
-	 *
-	 * @param  int  $idFabricante, $idVehiculo
-	 * @return Response
-	 */
 	public function update(Request $request, $idFabricante, $idVehiculo){
 
 		$metodo = $request->method();
@@ -152,10 +120,11 @@ class FabricanteVehiculoController extends Controller {
 				], 404);
 		}
 
+
 		$vehiculo = $fabricante->vehiculos()->find($idVehiculo);
 		if(!$vehiculo){
 			return response()->json([
-				'menssage' => "Not found vehicle", 
+				'menssage' => "This vehicle is not found associated with this manufacturer.", 
 				"error" => True
 				], 404);
 		}
@@ -191,10 +160,10 @@ class FabricanteVehiculoController extends Controller {
 
 			if($bandera){
 				$vehiculo->save();
-				return response()->json(['mensaje' => 'vehiculo editado'],200);
+				return response()->json(['message' => 'vehiculo editado'],200);
 			}
 			
-			return response()->json(['mensaje' => 'None vehicle was modified'],200);	
+			return response()->json(['message' => 'None vehicle was modified'], 200);	
 		}
 
 		// es PUT
