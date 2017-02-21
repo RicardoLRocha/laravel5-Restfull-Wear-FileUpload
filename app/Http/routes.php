@@ -48,6 +48,37 @@ Route::get('vehiculos/op/costo/entre', 'VehiculoOperacionesController@cost_betwe
 
 
 
+/** =================================================================
+		-- Obtener TOKEN
+POST: http://localhost/curso%20laravel/rest_project/server.php/oauth/access_token
+
+1 (sin Header)
+2 (select) form-data
+
+grant_type 		password   (lo definimos en config/oauth2.php)
+client_id
+client_secret
+(de nuestra tabla users)
+usarname
+password
+
+(Regresa)
+{
+  "access_token": "q9bU43xzyOzi46wuQJnMRqXJVFE5GwLTqgkeieQO",
+  "token_type": "Bearer",
+  "expires_in": 3600
+}
+
+-- USO
+=========
+(otro campo, sin cabezera)
+access token    q9bU43xzyOzi46wuQJnMRqXJVFE5GwLTqgkeieQO
+*/
+Route::post('oauth/access_token', function(){
+    return Response::json(Authorizer::issueAccessToken());
+});
+
+
 /**
 Laravel lee secuencialmente las Rutas URL, por eso las que no existen se ponen abajo
 */

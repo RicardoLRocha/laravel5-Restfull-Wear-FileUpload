@@ -20,7 +20,11 @@ class FabricanteController extends Controller {
 	============================================= */
 	public function __construct(){
 
-		$this->middleware('auth.basic.once', ['only' => ['store', 'update', 'destroy']]  );
+		// Authentication basic
+		// $this->middleware('auth.basic.once', ['only' => ['store', 'update', 'destroy']]  );
+
+		// Authentication OAUTH
+		$this->middleware('oauth', ['only' => ['store', 'update', 'destroy']]  );
 	}
 
 
@@ -31,7 +35,7 @@ class FabricanteController extends Controller {
 	 */
 	public function index(){
 		
-		Respuestas en CACHE
+		// Respuestas en CACHE
 		$fabricante_cache = Cache::remember('fabricantes', 15/60, function(){
 
 			// return Fabricante::all();
@@ -48,16 +52,17 @@ class FabricanteController extends Controller {
 			return Fabricante::simplePaginate(15); 
 
 		});
+
 		
 		//return response()->json(['data' => $fabricante_cache], 200);
 
 		// Con paginacion
 		return response()->json([
-			'data' => $fabricante_cache->item(),
+			'data' => $fabricante_cache->items(),
 			'previous' => $fabricante_cache->previousPageUrl(),
-			'next' => $fabricante_cache->nextPageUrl(),
-
+			'next' => $fabricante_cache->nextPageUrl()
 			], 200);
+
 
 		// antes Responce::JSON
 		// respuesta sin cache

@@ -20,7 +20,15 @@ class Kernel extends HttpKernel {
 		Utilizado cuando hacemos formularios con Laravel, en este caso es un REST 
 		===================================================== */
 		// 'App\Http\Middleware\VerifyCsrfToken',
+
+
+		/** ===================================
+			Para OUATH2
+		=================================== */
+		'LucaDegasperi\OAuth2Server\Middleware\OAuthExceptionHandlerMiddleware',
 	];
+
+
 
 	/**
 	 * The application's route middleware.
@@ -33,7 +41,13 @@ class Kernel extends HttpKernel {
 		
 		// indicar a mis controlladores que usaran este
 		'auth.basic.once' => 'App\Http\Middleware\OnceAuth',
+		
+		/** ===================================
+			Para OUATH2
+		=================================== */
 		'guest' => 'App\Http\Middleware\RedirectIfAuthenticated',
+ 		'oauth' => '\LucaDegasperi\OAuth2Server\Middleware\OAuthMiddleware'
+
 	];
 
 }

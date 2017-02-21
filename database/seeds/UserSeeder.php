@@ -10,7 +10,7 @@ class UserSeeder extends Seeder {
 
 
 	/**
-	 * Run the database seeds.
+	 * usado paa autenticacion Basic 
 	 *
 	 * @return void
 	 */
@@ -18,6 +18,11 @@ class UserSeeder extends Seeder {
 	{
 		User::create([
 			'email' => 'thrafiker@gmail',
+			'password' => Hash::make('1234')
+			]);
+		
+		User::create([
+			'email' => 'richi@gmail',
 			'password' => Hash::make('1234')
 			]);
 

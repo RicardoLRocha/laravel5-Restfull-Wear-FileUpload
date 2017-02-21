@@ -19,7 +19,11 @@ class FabricanteVehiculoController extends Controller {
 	============================================= */
 	public function __construct(){
 
-		$this->middleware('auth.basic.once', ['only' => ['store', 'update', 'destroy']]  );
+		// Authentication basic
+		// $this->middleware('auth.basic.once', ['only' => ['store', 'update', 'destroy']]  );
+
+		// Authentication OAUTH
+		$this->middleware('oauth', ['only' => ['store', 'update', 'destroy']]  );
 	}
 
 
