@@ -27,6 +27,14 @@ fabricantes.vehiculos
 
 =============================================== */
 
+// Versionamiento en URL del REST
+Route::group( array('prefix' => 'api/v1.0'), function(){ // functon clousure
+
+ // se meten todas las URL Route:: de abajo
+
+	
+});
+
 // rompe con idea de REST
 // Route::get('/','VehiculoController@show_all');
 Route::resource('vehiculos','VehiculoController', ['only' => ['index', 'show']]);
@@ -37,6 +45,8 @@ Route::resource('fabricantes.vehiculos','FabricanteVehiculoController', ['except
 Route::get('vehiculos/op/costo/mayor', 'VehiculoOperacionesController@costo_mayor');
 Route::post('vehiculos/op/costo/mayor/que', 'VehiculoOperacionesController@cost_major_that');
 Route::get('vehiculos/op/costo/entre', 'VehiculoOperacionesController@cost_between');
+
+
 
 /**
 Laravel lee secuencialmente las Rutas URL, por eso las que no existen se ponen abajo

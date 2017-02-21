@@ -4,6 +4,9 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+
+// Casi todas en MAYUS al inicio por ser clases
 
 # use App\Fabricante as FabricanteModel; 
 use App\Fabricante;
@@ -28,9 +31,37 @@ class FabricanteController extends Controller {
 	 */
 	public function index(){
 		
-		// antes Responce::JSON
+		Respuestas en CACHE
+		$fabricante_cache = Cache::remember('fabricantes', 15/60, function(){
 
-		return response()->json(['data' => Fabricante::all()], 200);
+			// return Fabricante::all();
+
+			/** =======================================
+			paginate para paginas y no REST
+			Paginar cada 15 elementos
+
+			ACCESO URL  ?page=2 (num de pag)
+
+			http://localhost/curso%20laravel/rest_project/server.php/fabricantes?page=2
+
+			======================================= */
+			return Fabricante::simplePaginate(15); 
+
+		});
+		
+		//return response()->json(['data' => $fabricante_cache], 200);
+
+		// Con paginacion
+		return response()->json([
+			'data' => $fabricante_cache->item(),
+			'previous' => $fabricante_cache->previousPageUrl(),
+			'next' => $fabricante_cache->nextPageUrl(),
+
+			], 200);
+
+		// antes Responce::JSON
+		// respuesta sin cache
+		//return response()->json(['data' => Fabricante::all()], 200);
 	}
 
 	/**
