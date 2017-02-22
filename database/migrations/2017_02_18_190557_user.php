@@ -32,7 +32,7 @@ class User extends Migration {
 			$table->increments('id');
 			$table->string('email')->unique();
 			$table->string('password');
-			$table->timestamps();
+			$table->nullableTimestamps();
 		});
 	}
 

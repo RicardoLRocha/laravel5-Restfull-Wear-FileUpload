@@ -42,6 +42,8 @@ Route::resource('fabricantes','FabricanteController', ['except' => ['edit', 'cre
 Route::resource('fabricantes.vehiculos','FabricanteVehiculoController', ['except' => ['show', 'edit', 'create']]);
 
 // > php artisan make:controller VehiculoOperacionesController
+Route::get('fabricantes/foto', 'FabricanteController@obtener_foto');
+
 Route::get('vehiculos/op/costo/mayor', 'VehiculoOperacionesController@costo_mayor');
 Route::post('vehiculos/op/costo/mayor/que', 'VehiculoOperacionesController@cost_major_that');
 Route::get('vehiculos/op/costo/entre', 'VehiculoOperacionesController@cost_between');

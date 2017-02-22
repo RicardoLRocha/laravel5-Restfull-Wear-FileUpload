@@ -3,6 +3,10 @@
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
+
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
@@ -89,7 +93,7 @@ class FabricanteController extends Controller {
 		if( !$request-> input('nombre') || 
 			!$request-> input('telefono') || 
 			!$request-> input('tipo') || 
-			!$request-> input('foto')  ){
+			!$request-> file('foto')  ){
 
 			return response()->json([
 				'menssage' => "Complete required fields",
@@ -97,12 +101,29 @@ class FabricanteController extends Controller {
 				], 422);
 		}
 
+		// Fabricante::create( $request->all() );
+		$fabricante = new Fabricante( $request->input() );
 
-		Fabricante::create( $request->all() );
+		$this->validate($request, [
+			'foto' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+		]);
+
+		if($file = $request->hasFile('foto')) {
+
+			$file = $request->file('foto') ;
+			$fileName = $file->getClientOriginalName() ;
+			
+			$destinationPath = public_path().'/storage/' ;
+			$file->move($destinationPath, $fileName);
+			$fabricante->foto = $fileName ;
+		}
+
+		$fabricante->save() ;
 
 		return response()->json([
 			'menssage' => "successful",
-			"error" => False
+			"error" => False, 
+			'data' => $fabricante
 			], 200);
 
 	}
@@ -124,10 +145,34 @@ class FabricanteController extends Controller {
 		}else{
 			return response()->json([
 				'menssage' => $fabricante,
-				 'error' => False
-				 ], 200);
+				'error' => False,
+				// 'image_url' => URL::to('/').'/public/image/'.$fabricante->foto
+				'foto' => Storage::url('uam.jpg'),
+				], 200);
 		}
 	}
+
+
+	/**
+		Obtener la imagen de un fabricante por su id
+	*/
+	public function obtener_foto($id){
+		$fabricante = Fabricante::find($id);
+		
+		if(!$fabricante){
+			return response()->json([
+				'menssage' => "Not found manufacturer",
+				"error" => True
+				], 404);
+		}else{
+			
+	      $public_path = public_path();
+     		$url = $public_path.'/storage/'.$fabricante->foto;
+
+	      return response()->download($url);
+		}
+	}
+
 
 	/**
 	 * Show the form for editing the specified resource.
@@ -142,6 +187,8 @@ class FabricanteController extends Controller {
 
 	/**
 	 * Update the specified resource in storage.
+	 *
+	 * solo modifica el nombre de foto, no vuelve a cargarla
 	 *
 	 * @param  int  $id
 	 * @return Response
@@ -167,22 +214,22 @@ class FabricanteController extends Controller {
 			if( $method === 'PATCH' ){
 
 				$nombre = $request->input('nombre');
- 				if($nombre != null && $nombre != '')
+				if($nombre != null && $nombre != '')
 					$fabricante->nombre = $nombre;
  
- 				$telefono = $request->input('telefono');
+				$telefono = $request->input('telefono');
 
- 				if($telefono != null && $telefono != '')
- 					$fabricante->telefono = $telefono;
+				if($telefono != null && $telefono != '')
+					$fabricante->telefono = $telefono;
 				
- 				$tipo = $request->input('tipo');
- 				if($tipo != null && $tipo != '')
+				$tipo = $request->input('tipo');
+				if($tipo != null && $tipo != '')
 					$fabricante->tipo = $tipo;
  
- 				$foto = $request->input('foto');
+				$foto = $request->input('foto');
 
- 				if($foto != null && $foto != '')
- 					$fabricante->foto = $foto;
+				if($foto != null && $foto != '')
+					$fabricante->foto = $foto;
 
 			
 				$fabricante->save();
@@ -198,7 +245,7 @@ class FabricanteController extends Controller {
 				$nombre = $request->input('nombre');
 				$telefono = $request->input('telefono');
 				$tipo = $request->input('tipo');
- 				$foto = $request->input('foto');
+				$foto = $request->input('foto');
 
 
 				if(!$nombre || !$telefono || !$tipo || !$foto )
@@ -228,12 +275,12 @@ class FabricanteController extends Controller {
 
 
 	private function procesa_patch($val_input){
-    if( $val_input != null && $val_input != '' ){
+	if( $val_input != null && $val_input != '' ){
 			$nuevo_val->nombre = $request->input('nombre');
 			return $nuevo_val;
-    }else{
-    	return;
-    }
+	}else{
+		return;
+	}
 
 	}
 
@@ -248,11 +295,11 @@ class FabricanteController extends Controller {
 	public function destroy($id){
 		$fabricante = Fabricante::find($id);
  
- 		if(!$fabricante)
- 			return response()->json([
- 				'message' => 'No se encuentra este fabricante',
- 				'error' => True
- 				],404);
+		if(!$fabricante)
+			return response()->json([
+				'message' => 'No se encuentra este fabricante',
+				'error' => True
+				],404);
 			
 		$vehiculos = $fabricante->vehiculos;
 

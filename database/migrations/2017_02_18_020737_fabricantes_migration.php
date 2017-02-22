@@ -19,7 +19,7 @@ class FabricantesMigration extends Migration {
 			$table->integer('telefono');
 			$table->enum('tipo', array('completos', 'autopartes', 'semipartes' ));	
 			$table->string('foto')->default('desconocida');
-			$table->timestamps();
+			$table->nullableTimestamps();
 		});
 	}
 
